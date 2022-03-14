@@ -14,9 +14,14 @@ const routes = [
     component: () => import ('../views/Video.vue')
   },
   {
+    path: '/videos',
+    component: () => import ('../views/Videos.vue')
+  },
+  {
     path: '/:pathMatch(.*)',
     name: 'NotFound',
-    component: () => import ('../views/NotFound.vue')}
+    component: () => import ('../views/NotFound.vue')
+  }
 ]
 
 const router = createRouter({
