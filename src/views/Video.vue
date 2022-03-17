@@ -52,7 +52,6 @@ import {
   IonToolbar,
 } from '@ionic/vue';
 
-
 export default {
   name: 'Video',
   components: {
