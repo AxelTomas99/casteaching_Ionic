@@ -19,22 +19,17 @@
           <ion-card-subtitle>Please login</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
-
           <ion-item>
             <ion-label>Email</ion-label>
             <ion-input v-model="email" placeholder="email" type="text"></ion-input>
           </ion-item>
-
           <ion-item>
             <ion-label>Password</ion-label>
             <ion-input v-model="password" placeholder="password" type="password"></ion-input>
           </ion-item>
-
           <ion-button @click="login">Login</ion-button>
-
         </ion-card-content>
       </ion-card>
-
     </ion-content>
   </ion-page>
 </template>
@@ -52,9 +47,9 @@ import {
   IonTitle,
   IonToolbar
 } from "@ionic/vue";
-import { Device } from '@capacitor/device';
-import casteaching from '@acacha/casteaching'
+import {Device} from '@capacitor/device';
 import store from "../store";
+
 export default {
   name: 'login',
   components: {
@@ -74,7 +69,7 @@ export default {
     IonButton,
     IonItem
   },
-  data () {
+  data() {
     return {
       email: '',
       password: ''
@@ -82,59 +77,33 @@ export default {
   },
   methods: {
     async login() {
-
       const info = await Device.getInfo();
 
       let token = null
       const device_name = (info && info.name) || 'TokenCasteachingIonic'
-
-      const apiClient = axios.create({
-        baseURL: 'https://casteaching.alumnedam.me/api',
-        withCredentials: true,
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        }
-      })
-      const postData = {
-        email: this.email,
-        password: this.password,
-        device_name: device_name
-      }
-      let response = null
-      let response2 = null
       try {
-        response = await apiClient.post('/sanctum/token', postData)
+        token = await this.casteaching.login(this.email, this.password, device_name)
+        this.casteaching.setToken(token)
       } catch (error) {
         console.log(error);
       }
-
-      token = response.data
-      const axiosClient = axios.create({
-        baseURL: 'https://casteaching.alumnedam.me/api',
-        withCredentials: true,
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + token
-        }
-      })
+      let user
       try {
-        response2 = await axiosClient.get('/user')
+        user = await this.casteaching.user()
       } catch (error) {
         console.log(error);
       }
-      const user = response2.data
 
       await store.set('token', token)
       await store.set('user', user)
-      this.emitter.emit('login',user)
+      this.emitter.emit('login', user)
 
       let path = '/user'
 
-      if(this.$route.params && this.$route.params.wantedRoute) path = this.$route.params.wantedRoute
-      this.$router.push({ path })
+      if (this.$route.params && this.$route.params.wantedRoute) path = this.$route.params.wantedRoute
+      this.$router.push({path})
     }
   }
 }
 </script>
+}

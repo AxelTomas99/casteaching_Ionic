@@ -4,6 +4,7 @@ import mitt from 'mitt';
 const emitter = mitt();
 import router from './router';
 
+import casteaching from '@acacha/casteaching'
 import { IonicVue } from '@ionic/vue';
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -26,5 +27,6 @@ const app = createApp(App)
 
 router.isReady().then(() => {
     app.config.globalProperties.emitter = emitter;
+    app.config.globalProperties.casteaching = casteaching({baseUrl:'https://casteaching.axeltomas.codes/api'});
     app.mount('#app');
 });
