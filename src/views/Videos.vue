@@ -91,15 +91,17 @@
         <ion-list-header>
           Videos
         </ion-list-header>
+
         <ion-item v-for="video in videos" :key="video.id">
           <ion-avatar slot="start">
-            <img src="https://via.placeholder.com/80" alt="">
+            <img src="https://via.placeholder.com/80">
           </ion-avatar>
           <ion-label>
             <h2>{{ video.title }}</h2>
             <p>{{ video.description }}</p>
           </ion-label>
         </ion-item>
+
       </ion-list>
     </ion-content>
   </ion-page>
@@ -108,16 +110,16 @@
 <script>
 import {
   IonAvatar,
-  IonContent,
   IonItem,
   IonLabel,
   IonList,
   IonListHeader,
   IonRefresher,
   IonRefresherContent,
-  IonSkeletonText
+  IonContent,
+  IonSkeletonText,
+  IonPage
 } from "@ionic/vue";
-
 export default {
   name: "Videos",
   components: {
@@ -130,9 +132,9 @@ export default {
     IonRefresherContent,
     IonContent,
     IonSkeletonText,
-
+    IonPage
   },
-  data(){
+  data() {
     return {
       videos: [],
       loading: true
@@ -147,16 +149,20 @@ export default {
   },
   methods: {
     async refresh() {
-      await this.fetchVideos();
+      await this.fetchVideos()
       this.refresher.complete();
     },
-    async fetchVideos(){
-      this.videos = await this.casteaching.videos()
+    async fetchVideos() {
+      try {
+        this.videos = await this.casteaching.videos()
+      } catch (error) {
+        console.log(error);
+        // TODO toast
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-
 </style>
